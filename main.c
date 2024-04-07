@@ -25,6 +25,7 @@ int main() {
     }
     
     fclose(fp);
+    fp = NULL;
     
     return 0;
 }

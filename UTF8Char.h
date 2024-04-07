@@ -8,7 +8,7 @@ union UTF8Char {
     // Representação do code point como um número inteiro positivo.
     uint32_t full; 
 
-    /* Array que separa cada um dos bytes que compõem o code point.
+    /* Array que delimita cada um dos bytes que compõem o code point.
     
     `octet[0]` é o byte menos significativo, `octet[3]` o byte
     mais significativo. A representação final do code point segue

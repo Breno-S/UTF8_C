@@ -27,66 +27,66 @@ union UTF8Char UTF8_encode(uint32_t cp) {
         // Se possuir dentre 8 a 11 bits, aplica-se a lógica de 2 bytes
         if (cp < 0x800) {
             // Prepara os octetos com os leading bits
-            final_cp.octet[0] = 0x80; // 10xxxxxx
-            final_cp.octet[1] = 0xC0; // 110xxxxx
-            final_cp.octet[2] = 0x0;  // 00000000
-            final_cp.octet[3] = 0x0;  // 00000000
+            final_cp.octet[0] = 0b10000000; // 10######
+            final_cp.octet[1] = 0b11000000; // 110#####
+            final_cp.octet[2] = 0b00000000;
+            final_cp.octet[3] = 0b00000000;
 
             // 6 primeiros bits do primeiro octeto preenchem o primeiro byte
-            final_cp.octet[0] |= (aux_cp.octet[0] & 0x3F);
+            final_cp.octet[0] |= (aux_cp.octet[0] & 0b00111111);
 
             // Outros 2 bits do primeiro octeto vão pro começo do segundo byte
-            final_cp.octet[1] |= ((aux_cp.octet[0] & 0xC0) >> 6);
+            final_cp.octet[1] |= ((aux_cp.octet[0] & 0b11000000) >> 6);
 
-            // 3 bits restantes vão no segundo byte com offset de duas posições  
-            final_cp.octet[1] |= ((aux_cp.octet[1] & 0x07) << 2);
+            // 3 bits restantes vão no segundo byte com offset de duas posições
+            final_cp.octet[1] |= ((aux_cp.octet[1] & 0b00000111) << 2);
         }
 
         // Se possuir dentre 12 a 16 bits, é codificado em 3 bytes
         else if (cp < 0x10000) {
             // Prepara os octetos com os leading bits
-            final_cp.octet[0] = 0x80; // 10xxxxxx
-            final_cp.octet[1] = 0x80; // 10xxxxxx
-            final_cp.octet[2] = 0xE0; // 1110xxxx
-            final_cp.octet[3] = 0x00; // 00000000
+            final_cp.octet[0] = 0b10000000; // 10######
+            final_cp.octet[1] = 0b10000000; // 10######
+            final_cp.octet[2] = 0b11100000; // 1110####
+            final_cp.octet[3] = 0b00000000;
 
             // 6 primeiros bits do primeiro octeto preenchem o primeiro byte
-            final_cp.octet[0] |= (aux_cp.octet[0] & 0x3F);
+            final_cp.octet[0] |= (aux_cp.octet[0] & 0b00111111);
 
             // Outros 2 bits do primeiro octeto vão pro começo do segundo byte
-            final_cp.octet[1] |= ((aux_cp.octet[0] & 0xC0) >> 6);
+            final_cp.octet[1] |= ((aux_cp.octet[0] & 0b11000000) >> 6);
 
             // 4 primeiros bits do segundo octeto completam o segundo byte
-            final_cp.octet[1] |= ((aux_cp.octet[1] & 0x0F) << 2);
+            final_cp.octet[1] |= ((aux_cp.octet[1] & 0b00001111) << 2);
 
-            // 4 bits finais do segundo octeto preenchem o terceiro byte
-            final_cp.octet[2] |= ((aux_cp.octet[1] & 0xF0) >> 4);
+            // 4 bits finais do segundo octeto vão para o terceiro byte
+            final_cp.octet[2] |= ((aux_cp.octet[1] & 0b11110000) >> 4);
         }
 
-        // Se possuir dentre 17 e 21, é codificado em 4 bytes
+        // Se possuir dentre 17 e 21 bits, é codificado em 4 bytes
         else if (cp < 0x10FFFF) {
             // Prepara os octetos com os leading bits
-            final_cp.octet[0] = 0x80; // 10xxxxxx
-            final_cp.octet[1] = 0x80; // 10xxxxxx
-            final_cp.octet[2] = 0x80; // 10xxxxxx
-            final_cp.octet[3] = 0xF0; // 11110xxx
+            final_cp.octet[0] = 0b10000000; // 10######
+            final_cp.octet[1] = 0b10000000; // 10######
+            final_cp.octet[2] = 0b10000000; // 10######
+            final_cp.octet[3] = 0b11110000; // 11110###
 
             // 6 primeiros bits do primeiro octeto preenchem o primeiro byte
-            final_cp.octet[0] |= (aux_cp.octet[0] & 0x3F);
+            final_cp.octet[0] |= (aux_cp.octet[0] & 0b00111111);
 
             // Outros 2 bits do primeiro octeto vão pro começo do segundo byte
-            final_cp.octet[1] |= ((aux_cp.octet[0] & 0xC0) >> 6);
+            final_cp.octet[1] |= ((aux_cp.octet[0] & 0b11000000) >> 6);
 
             // 4 primeiros bits do segundo octeto completam o segundo byte
-            final_cp.octet[1] |= ((aux_cp.octet[1] & 0x0F) << 2);
+            final_cp.octet[1] |= ((aux_cp.octet[1] & 0b00001111) << 2);
 
             // 4 bits finais do segundo octeto vão pro começo do terceiro byte
-            final_cp.octet[2] |= ((aux_cp.octet[1] & 0xF0) >> 4);
+            final_cp.octet[2] |= ((aux_cp.octet[1] & 0b11110000) >> 4);
 
             // 2 primeiros bits do último octeto completam o terceiro byte
-            final_cp.octet[2] |= ((aux_cp.octet[2] & 0x03) << 4);
+            final_cp.octet[2] |= ((aux_cp.octet[2] & 0b00000011) << 4);
 
-            // 3 últimos bits preenchem o quarto byte
+            // 3 últimos bits vão para o quarto byte
             final_cp.octet[3] |= (aux_cp.octet[2] >> 2);
         }
     }
