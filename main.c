@@ -1,31 +1,23 @@
 #include <stdio.h>
+#include <stdint.h>
 #include "UTF8Char.h"
 
-int main() {
-    // Code point Unicode (ou UTF-32) a ser codificado em UTF-8.
-    uint32_t cp = 0x1F4A9;
+int	main(void)
+{
+	uint32_t	cp;
+	t_utf8		utf8;
+	FILE		*fp;
 
-    // Code point codificado em UTF-8.
-    union UTF8Char utf8 = UTF8_encode(cp);
-
-    FILE *fp = NULL;
-    fp = fopen("texto_utf8.txt", "a");
-
-    if (fp == NULL) {
-        printf("Erro ao abrir o arquivo\n");
-        return 1;
-    } 
-    
-    // Copia os bytes (em ordem inversa) para o arquivo.
-
-    for (int i = 3; i >= 0; i--) {
-        if (utf8.octet[i] != 0) {
-            fputc(utf8.octet[i], fp);
-        }
-    }
-    
-    fclose(fp);
-    fp = NULL;
-    
-    return 0;
+	cp = 0x1F4A9;
+	utf8 = utf8_encode(cp);
+	fp = fopen("text_output.txt", "a");
+	if (fp == NULL)
+	{
+		perror("Error opening file");
+		return (1);
+	}
+	utf8_fput(utf8, fp);
+	fclose(fp);
+	fp = NULL;
+	return (0);
 }

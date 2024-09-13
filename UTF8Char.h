@@ -1,23 +1,61 @@
-#include <stdint.h>
+#ifndef UTF8CHAR_H
+# define UTF8CHAR_H
 
-/* Estrutura de 4 bytes que armazena um code point UTF-8.
+# include <stdint.h>
+# include <stdio.h>
 
-Cada byte pode ser acessado chamando `octet[n]`,
-onde `n` é a posição do byte menos 1. */
-union UTF8Char {
-    // Representação do code point como um número inteiro positivo.
-    uint32_t full; 
+/********************************** ENUMS *************************************/
 
-    /* Array que delimita cada um dos bytes que compõem o code point.
-    
-    `octet[0]` é o byte menos significativo, `octet[3]` o byte
-    mais significativo. A representação final do code point segue
-    a ordem do mais significativo para o menos significativo. */
-    unsigned char octet[4];
+/**
+ * @brief Codepoint limits for 1-byte, 2-byte, 3-byte and 4-byte encodings.
+ */
+enum e_cp_encoding_limits
+{
+	SEVEN_BITS = 0x7F,			/* 1-byte UTF-8 limit */
+	ELEVEN_BITS = 0x7FF,		/* 2-byte UTF-8 limit */
+	SIXTEEN_BITS = 0xFFFF,		/* 3-byte UTF-8 limit */
+	CODEPOINT_MAX = 0x10FFFF    /* 4-byte UTF-8 limit */
 };
 
-/* Codifica um codepoint Unicode em UTF-8.
+/**
+ * @brief Ignored codepoint ranges.
+ */
+enum e_cp_ignored_ranges
+{
+	SURROGATES_START = 0xD800,
+	SURROGATES_END = 0xDFFF,
+	NONCHAR_START = 0xFDD0,
+	NONCHAR_END = 0xFDEF
+};
 
-Sempre retorna uma `union UTF8Char` contendo um code point em UTF-8.
-Se o argumento for um code point inválido, retorna um replacement character. */
-union UTF8Char UTF8_encode(uint32_t);
+/********************************* TYPES **************************************/
+
+/**
+ * @brief 4 byte structure for a single codepoint. 
+ * Each byte can be accessed via `octet[n]`.
+ * 
+ * `octet[0]` holds the least significant byte.
+ */
+typedef union u_utf8
+{
+	uint32_t		full;
+	unsigned char	octet[4];
+}	t_utf8;
+
+/******************************** FUNCTIONS ***********************************/
+
+/**
+ * @brief Encodes a Unicode codepoint into UTF-8.
+ * @param cp Unicode codepoint.
+ * @return The resulting UTF-8 encoding.
+ */
+t_utf8	utf8_encode(uint32_t cp);
+
+/** 
+ * @brief Appends UTF-8 character to a file.
+ * @param utf8: UTF-8 encoded codepoint.
+ * @param fp: Pointer to opened file.
+ */
+void	utf8_fput(t_utf8 utf8, FILE *fp);
+
+#endif
