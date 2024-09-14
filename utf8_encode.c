@@ -39,73 +39,48 @@ t_utf8	utf8_encode(uint32_t cp)
 
 /**
  * Encodes 8-11 bit codepoints.
- *
- * ---
- * 
- * 1st byte: first 6 bits
- * 2nd byte: last 5 bits
  */
 void	encode_2_bytes(t_utf8 *utf8, uint32_t cp)
 {
-	t_utf8	aux;
-
-	aux.full = cp;
 	utf8->octet[0] = 0b10000000;
-	utf8->octet[0] |= (aux.octet[0] & 0b00111111);
+	utf8->octet[0] |= cp & 0b00111111;
+	cp >>= 6;
 	utf8->octet[1] = 0b11000000;
-	utf8->octet[1] |= ((aux.octet[0] & 0b11000000) >> 6);
-	utf8->octet[1] |= ((aux.octet[1] & 0b00000111) << 2);
+	utf8->octet[1] |= cp & 0b00011111;
 	utf8->octet[2] = 0b00000000;
 	utf8->octet[3] = 0b00000000;
 }
 
 /**
  * Encodes 12-16 bit codepoints.
- *
- * ---
- * 
- * 1st byte: first 6 bits  
- * 2nd byte: next 6 bits
- * 3rd byte: last 4 bits
  */
 void	encode_3_bytes(t_utf8 *utf8, uint32_t cp)
 {
-	t_utf8	aux;
-
-	aux.full = cp;
 	utf8->octet[0] = 0b10000000;
-	utf8->octet[0] |= (aux.octet[0] & 0b00111111);
+	utf8->octet[0] |= cp & 0b00111111;
+	cp >>= 6;
 	utf8->octet[1] = 0b10000000;
-	utf8->octet[1] |= ((aux.octet[0] & 0b11000000) >> 6);
-	utf8->octet[1] |= ((aux.octet[1] & 0b00001111) << 2);
+	utf8->octet[1] |= cp & 0b00111111;
+	cp >>= 6;
 	utf8->octet[2] = 0b11100000;
-	utf8->octet[2] |= ((aux.octet[1] & 0b11110000) >> 4);
+	utf8->octet[2] |= cp & 0b00001111;
 	utf8->octet[3] = 0b00000000;
 }
 
 /** 
  * Encodes 17-21 bit codepoints.
- *
- * ---
- * 
- * 1st byte: first 6 bits
- * 2nd byte: next 6 bits
- * 3rd byte: another 6 bits
- * 4th byte: last 3 bits
  */
 void	encode_4_bytes(t_utf8 *utf8, uint32_t cp)
 {
-	t_utf8	aux;
-
-	aux.full = cp;
 	utf8->octet[0] = 0b10000000;
-	utf8->octet[0] |= (aux.octet[0] & 0b00111111);
+	utf8->octet[0] |= cp & 0b00111111;
+	cp >>= 6;
 	utf8->octet[1] = 0b10000000;
-	utf8->octet[1] |= ((aux.octet[0] & 0b11000000) >> 6);
-	utf8->octet[1] |= ((aux.octet[1] & 0b00001111) << 2);
+	utf8->octet[1] |= cp & 0b00111111;
+	cp >>= 6;
 	utf8->octet[2] = 0b10000000;
-	utf8->octet[2] |= ((aux.octet[1] & 0b11110000) >> 4);
-	utf8->octet[2] |= ((aux.octet[2] & 0b00000011) << 4);
+	utf8->octet[2] |= cp & 0b00111111;
+	cp >>= 6;
 	utf8->octet[3] = 0b11110000;
-	utf8->octet[3] |= (aux.octet[2] >> 2);
+	utf8->octet[3] |= cp & 0b00000111;
 }
