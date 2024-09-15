@@ -44,7 +44,7 @@ void	read_2_bytes(t_utf8 *utf8, FILE *fp)
 	if (((utf8->octet[0] & 0b11000000) != 0b10000000)
 		|| ((utf8->octet[1] & 0b11100000) != 0b11000000)
 		|| (utf8->full >= SURRO_START_UTF8 && utf8->full <= SURRO_END_UTF8)
-		|| (utf8->full >= NONCHAR_START_UC && utf8->full <= NONCHAR_END_UC))
+		|| (utf8->full >= NONCHAR_START_UTF8 && utf8->full <= NONCHAR_END_UTF8))
 		utf8->full = REPLACEMENT_CHARACTER_UTF8;
 }
 
@@ -57,7 +57,7 @@ void	read_3_bytes(t_utf8 *utf8, FILE *fp)
 		|| ((utf8->octet[1] & 0b11100000) != 0b10000000)
 		|| ((utf8->octet[2] & 0b11110000) != 0b11100000)
 		|| (utf8->full >= SURRO_START_UTF8 && utf8->full <= SURRO_END_UTF8)
-		|| (utf8->full >= NONCHAR_START_UC && utf8->full <= NONCHAR_END_UC))
+		|| (utf8->full >= NONCHAR_START_UTF8 && utf8->full <= NONCHAR_END_UTF8))
 		utf8->full = REPLACEMENT_CHARACTER_UTF8;
 }
 
@@ -72,6 +72,6 @@ void	read_4_bytes(t_utf8 *utf8, FILE *fp)
 		|| ((utf8->octet[2] & 0b11000000) != 0b10000000)
 		|| ((utf8->octet[3] & 0b11111000) != 0b11110000)
 		|| (utf8->full >= SURRO_START_UTF8 && utf8->full <= SURRO_END_UTF8)
-		|| (utf8->full >= NONCHAR_START_UC && utf8->full <= NONCHAR_END_UC))
+		|| (utf8->full >= NONCHAR_START_UTF8 && utf8->full <= NONCHAR_END_UTF8))
 		utf8->full = REPLACEMENT_CHARACTER_UTF8;
 }
