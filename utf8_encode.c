@@ -18,10 +18,10 @@ t_utf8	utf8_encode(uint32_t cp)
 {
 	t_utf8	utf8;
 
-	utf8.full = 0xEFBFBD;
+	utf8.full = REPLACEMENT_CHARACTER_UTF8;
 	if ((cp > CODEPOINT_MAX)
-		|| ((cp >= SURROGATES_START && cp <= SURROGATES_END)
-			|| (cp >= NONCHAR_START && cp <= NONCHAR_END)))
+		|| ((cp >= SURRO_START_UC && cp <= SURRO_END_UC)
+			|| (cp >= NONCHAR_START_UC && cp <= NONCHAR_END_UC)))
 		return (utf8);
 	if (cp <= SEVEN_BITS)
 		utf8.full = cp;
