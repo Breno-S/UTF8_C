@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdint.h>
 #include "UTF8Char.h"
 
@@ -18,16 +19,18 @@ t_utf8	utf8_encode(uint32_t cp)
 {
 	t_utf8	utf8;
 
-	utf8.full = REPLACEMENT_CHARACTER_UTF8;
-	if ((cp > CODEPOINT_MAX)
+	utf8.full = 0;
+	if (cp == (uint32_t)EOF)
+		utf8.octet[0] = EOF;
+	else if ((cp > CODEPOINT_MAX)
 		|| ((cp >= SURRO_START_UC && cp <= SURRO_END_UC)
 			|| (cp >= NONCHAR_START_UC && cp <= NONCHAR_END_UC)))
-		return (utf8);
-	if (cp <= SEVEN_BITS)
-		utf8.full = cp;
+		utf8.full = REPLACEMENT_CHARACTER_UTF8;
 	else
 	{
-		if (cp <= ELEVEN_BITS)
+		if (cp <= SEVEN_BITS)
+			utf8.full = cp;
+		else if (cp <= ELEVEN_BITS)
 			encode_2_bytes(&utf8, cp);
 		else if (cp <= SIXTEEN_BITS)
 			encode_3_bytes(&utf8, cp);
