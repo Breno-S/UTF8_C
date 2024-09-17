@@ -21,7 +21,7 @@ t_utf8	utf8_encode(uint32_t cp)
 
 	utf8.full = 0;
 	if (cp == (uint32_t)EOF)
-		utf8.octet[0] = EOF;
+		utf8.full = EOF;
 	else if ((cp > CODEPOINT_MAX)
 		|| ((cp >= SURRO_START_UC && cp <= SURRO_END_UC)
 			|| (cp >= NONCHAR_START_UC && cp <= NONCHAR_END_UC)))
