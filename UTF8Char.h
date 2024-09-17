@@ -18,10 +18,24 @@ enum e_cp_encoding_limits
 };
 
 /**
+ * @brief Bit-masks for UTF-8 encodings bigger than 1-byte.
+ * (leading bits checking).
+ */
+enum e_utf8_masks
+{
+	TWO_BYTE_MASK = 0b1110000011000000,
+	TWO_BYTE_MASK_CHECK = 0b1100000010000000,
+	THREE_BYTE_MASK = 0b111100001100000011000000,
+	THREE_BYTE_MASK_CHECK = 0b111000001000000010000000,
+	FOUR_BYTE_MASK = 0b11111000110000001100000011000000,
+	FOUR_BYTE_MASK_CHECK = 0b11110000100000001000000010000000
+};
+
+/**
  * @brief Ignored codepoint ranges inside the Unicode table and their 
  * respective UTF-8 encodings.
  */
-enum e_cp_ignored_ranges
+enum e_ignored_ranges
 {
 	SURRO_START_UC = 0xD800,
 	SURRO_END_UC = 0xDFFF,
@@ -63,20 +77,27 @@ typedef union u_utf8
  * @param cp Unicode codepoint.
  * @return The resulting UTF-8 encoding.
  */
-t_utf8	utf8_encode(uint32_t cp);
+t_utf8		utf8_encode(uint32_t cp);
+
+/**
+ * @brief Decodes a UTF-8 character to its Unicode representation.
+ * @param utf8 UTF-8 encoded codepoint.
+ * @return The Unicode codepoint.
+ */
+uint32_t	utf8_decode(t_utf8 utf8);
 
 /** 
  * @brief Appends UTF-8 character to a file.
  * @param utf8 UTF-8 encoded codepoint.
  * @param fp Pointer to opened file.
  */
-void	utf8_fput(t_utf8 utf8, FILE *fp);
+void		utf8_fput(t_utf8 utf8, FILE *fp);
 
 /**
  * @brief Reads a single UTF-8 encoded codepoint from file.
  * @param fp Pointer to opened file.
  * @return The character read.
  */
-t_utf8	utf8_fget(FILE *fp);
+t_utf8		utf8_fget(FILE *fp);
 
 #endif
