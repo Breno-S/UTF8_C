@@ -20,7 +20,7 @@ t_utf8	utf8_fget(FILE *fp)
 
 	utf8.full = 0;
 	byte = fgetc(fp);
-	if ((byte & 0b10000000) == 0b00000000 || byte == EOF)
+	if (byte <= SEVEN_BITS || byte == EOF)
 		utf8.full = byte;
 	else
 	{

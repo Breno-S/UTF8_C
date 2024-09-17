@@ -15,12 +15,17 @@ void	utf8_fput(t_utf8 utf8, FILE *fp)
 
 	if (fp)
 	{
-		i = 3;
-		while (i >= 0)
+		if (utf8.full == EOF)
+			fputc(EOF, fp);
+		else
 		{
-			if (utf8.octet[i] || i == 0)
-				fputc(utf8.octet[i], fp);
-			i--;
+			i = 3;
+			while (i >= 0)
+			{
+				if (utf8.octet[i] || i == 0)
+					fputc(utf8.octet[i], fp);
+				i--;
+			}
 		}
 	}
 }
