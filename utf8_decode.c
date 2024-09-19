@@ -26,27 +26,43 @@ uint32_t	utf8_decode(t_utf8 utf8)
 void	decode_2_bytes(uint32_t *cp, t_utf8 utf8)
 {
 	utf8.full &= ~TWO_BYTE_MASK;
-	utf8.octet[0] |= utf8.octet[1] << 6;
-	utf8.octet[1] >>= 2;
-	*cp = utf8.full;
+	if (utf8.octet[1] <= 1)
+		*cp = REPLACEMENT_CHARACTER_UC;
+	else
+	{
+		*cp = 0;
+		*cp |= utf8.octet[0];
+		*cp |= utf8.octet[1] << 6;
+	}
 }
 
 void	decode_3_bytes(uint32_t *cp, t_utf8 utf8)
 {
-	utf8.full &= ~TWO_BYTE_MASK;
-	utf8.octet[0] |= utf8.octet[1] << 6;
-	utf8.octet[1] >>= 2;
-	utf8.octet[1] |= utf8.octet[2] << 4;
-	*cp = utf8.full;
+	utf8.full &= ~THREE_BYTE_MASK;
+	if (utf8.octet[2] == 0
+		&& utf8.octet[1] <= 0b00011111)
+		*cp = REPLACEMENT_CHARACTER_UC;
+	else
+	{
+		*cp = 0;
+		*cp |= utf8.octet[0];
+		*cp |= utf8.octet[1] << 6;
+		*cp |= utf8.octet[2] << 12;
+	}
 }
 
 void	decode_4_bytes(uint32_t *cp, t_utf8 utf8)
 {
-	utf8.full &= ~TWO_BYTE_MASK;
-	utf8.octet[0] |= utf8.octet[1] << 6;
-	utf8.octet[1] >>= 2;
-	utf8.octet[1] |= utf8.octet[2] << 4;
-	utf8.octet[2] >>= 4;
-	utf8.octet[2] |= utf8.octet[3] << 2;
-	*cp = utf8.full;
+	utf8.full &= ~FOUR_BYTE_MASK;
+	if (utf8.octet[3] == 0
+		&& utf8.octet[2] <= 0b00001111)
+		*cp = REPLACEMENT_CHARACTER_UC;
+	else
+	{
+		*cp = 0;
+		*cp |= utf8.octet[0];
+		*cp |= utf8.octet[1] << 6;
+		*cp |= utf8.octet[2] << 12;
+		*cp |= utf8.octet[3] << 18;
+	}
 }
