@@ -19,7 +19,7 @@ enum e_cp_encoding_limits
 
 /**
  * @brief Bit-masks for UTF-8 encodings bigger than 1-byte.
- * (leading bits checking).
+ * (leading-bits checking).
  */
 enum e_utf8_masks
 {
@@ -59,8 +59,8 @@ enum e_replacement_characters
 /********************************* TYPES **************************************/
 
 /**
- * @brief 4 byte structure for a single codepoint. 
- * Each byte can be accessed via `octet[n]`.
+ * @brief 4-byte structure for a single codepoint. 
+ * Each byte can be accessed with `octet[n]`.
  * 
  * `octet[0]` holds the least significant byte.
  */

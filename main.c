@@ -4,9 +4,9 @@
 
 int	main(void)
 {
-	uint32_t	cp;
-	t_utf8		utf8;
-	FILE		*fp;
+	uint32_t	cp;		// Unicode codepoint
+	t_utf8		utf8;	// UTF-8 encoding
+	FILE		*fp;	// File pointer (where result will be saved)
 
 	cp = 0x1F4A9;
 	utf8 = utf8_encode(cp);
